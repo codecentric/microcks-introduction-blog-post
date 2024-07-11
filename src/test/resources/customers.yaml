@@ -1,0 +1,217 @@
+# OpenAPI specification for the example API
+openapi: 3.1.0
+info:
+  title: api
+  # Microcks expects API versions for mock generation both in input specifications and accompanying "secondary
+  # artifacts" such as Postman collections with API examples. Moreover, the versions must match, which is why we rely
+  # on the Maven Resources Plugin to replace the term "${mocked_api.version}" with the eponymous property from the POM
+  # holding the desired API version.
+  version: "${mocked_api.version}"
+paths:
+  /customer_kinds:
+    get:
+      operationId: customer_kinds_get
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: string
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/CustomerKindsResponse"
+      security:
+        - api_key: []
+  /customer_kinds/{id}:
+    get:
+      operationId: customer_kind_details_get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Customer kind ID
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: object
+                    items:
+                      $ref: "#/components/schemas/CustomerKindDetailsResponse"
+      security:
+        - api_key: [ ]
+  /login:
+    post:
+      operationId: login_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+            # For illustrative purposes, we model API request and response examples both in this specification as well
+            # as in an accompanying Postman collection in the sense of a Microcks "secondary artifact"
+            examples:
+              some_customer:
+                value:
+                  email: some_customer@example.org
+                  password: 123456
+              invalid_credentials:
+                value:
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+              examples:
+                some_customer:
+                  value:
+                    customer_token: eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBUElNb2NrIiwiZW1haWwiOiJzb21lX2N1c3RvbWVyQGV4YW1wbGUub3JnIn0.7TECmPgKMLftw2kK_CncM_AK0r7HAY7AmkV0y7qSA5Y
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+              examples:
+                invalid_credentials:
+                  value:
+      security:
+        - api_key: []
+  /customer:
+    get:
+      operationId: customer_get
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerResponse"
+              examples:
+                some_customer:
+                  value:
+                    email: some_customer@example.org
+                    # For illustrative purposes, we let Microcks generate values for the following fields, thereby
+                    # providing a "dynamic mock" (see https://microcks.io/documentation/explanations/dynamic-content for
+                    # details)
+                    first_name: "{{ randomFirstName() }}"
+                    last_name: "{{ randomLastName() }}"
+                    company_name:
+                    address: "{{ randomStreetAddress() }}, {{ randomCity() }}, {{ randomCountry() }}"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerResponse"
+              examples:
+                invalid_credentials:
+                  value:
+      security:
+        - api_key: []
+components:
+  schemas:
+    CustomerKindsResponse:
+      title: CustomerKindsResponse
+      required:
+        - id
+        - kind
+      type: object
+      properties:
+        id:
+          title: Id
+          type: string
+          description: ID of the customer kind
+        kind:
+          title: Kind
+          type: string
+          description: Customer kind
+          example: Key account
+    CustomerKindDetailsResponse:
+      title: CustomerKindDetailsResponse
+      required:
+        - id
+        - kind
+        - createdOn
+        - updatedOn
+      type: object
+      properties:
+        id:
+          title: Id
+          type: string
+          description: ID of the customer kind
+        kind:
+          title: Kind
+          type: string
+          description: Customer kind
+          example: Key account
+        createdOn:
+          title: Created on
+          type: string
+          description: Timestamp of customer kind's creation
+        updatedOn:
+          title: Updated on
+          type: string
+          description: Timestamp of customer kind's last update
+    LoginRequest:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          title: Email
+          type: string
+          format: email
+        password:
+          title: Password
+          type: string
+          format: password
+          writeOnly: true
+    LoginResponse:
+      required:
+        - customer_token
+      type: object
+      properties:
+        customer_token:
+          title: Customer Token
+          type: string
+    CustomerResponse:
+      required:
+        - email
+        - first_name
+        - last_name
+        - company_name
+        - address
+      type: object
+      properties:
+        email:
+          title: Email
+          type: string
+          format: email
+        first_name:
+          title: First Name
+          type: string
+        last_name:
+          title: Last Name
+          type: string
+        company_name:
+          title: Company Name
+          type: string
+        address:
+          title: Address
+          type: string
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: api_key
