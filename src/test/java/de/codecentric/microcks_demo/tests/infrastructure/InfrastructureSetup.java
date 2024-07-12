@@ -91,7 +91,7 @@ public class InfrastructureSetup {
             .start();
 
         /*
-         * Generate a Java Web Token (JWT) that the API expects (as an additional, yet weak, security measure) for some
+         * Generate a JSON Web Token (JWT) that the API expects (as an additional, yet weak, security measure) for some
          * of its operations
          */
         apiKeyToken = buildMockedApiKeyToken();
