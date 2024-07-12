@@ -63,8 +63,8 @@ public class InfrastructureSetup {
 
     @Test
     void haltForInfrastructureExamination() {
-        logger.info("Mock HTTP endpoint: {}", apiMock.getHttpEndpoint());
-        logger.info("Ctrl+C to exit");
+        logger.info("Mock URI: {}", apiMock.getHttpEndpoint());
+        logger.info("Ctrl+c to exit");
         new Scanner(System.in).nextLine();
     }
 
