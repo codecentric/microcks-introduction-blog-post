@@ -168,7 +168,13 @@
 								}
 							},
 							"_postman_previewlanguage": null,
-							"header": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
 							"cookie": [],
 							"body": "{\n    \"id\": \"1\",\n    \"kind\": \"Private person\",\n    \"createdOn\": \"11.07.2024 07:50:51\",\n    \"updatedOn\": \"\"\n}"
 						},
@@ -201,7 +207,13 @@
 								}
 							},
 							"_postman_previewlanguage": null,
-							"header": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
 							"cookie": [],
 							"body": "{\n    \"id\": \"2\",\n    \"kind\": \"Commercial enterprise\",\n    \"createdOn\": \"11.07.2024 07:50:51\",\n    \"updatedOn\": \"11.07.2024 08:01:50\"\n}"
 						},
@@ -234,7 +246,13 @@
 								}
 							},
 							"_postman_previewlanguage": null,
-							"header": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"description": ""
+								}
+							],
 							"cookie": [],
 							"body": "{\n    \"id\": \"3\",\n    \"kind\": \"Public institution\",\n    \"createdOn\": \"{{ now(dd.MM.yyyy HH:mm:ss) }}\",\n    \"updatedOn\": \"\"\n}"
 						}

@@ -17,11 +17,7 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - type: string
-                  - type: array
-                    items:
-                      $ref: "#/components/schemas/CustomerKindsResponse"
+                $ref: "#/components/schemas/CustomerKindsResponse"
       security:
         - api_key: []
   /customer_kinds/{id}:
@@ -40,10 +36,7 @@ paths:
           content:
             application/json:
               schema:
-                anyOf:
-                  - type: object
-                    items:
-                      $ref: "#/components/schemas/CustomerKindDetailsResponse"
+                $ref: "#/components/schemas/CustomerKindDetailsResponse"
       security:
         - api_key: [ ]
   /login:
@@ -59,8 +52,8 @@ paths:
             examples:
               some_customer:
                 value:
-                  email: some_customer@example.org
-                  password: 123456
+                  email: ${some_customer_email}
+                  password: ${some_customer_password}
               invalid_credentials:
                 value:
         required: true
@@ -74,7 +67,7 @@ paths:
               examples:
                 some_customer:
                   value:
-                    customer_token: eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBUElNb2NrIiwiZW1haWwiOiJzb21lX2N1c3RvbWVyQGV4YW1wbGUub3JnIn0.7TECmPgKMLftw2kK_CncM_AK0r7HAY7AmkV0y7qSA5Y
+                    customer_token: ${some_customer_token}
         "401":
           description: Unauthorized
           content:
@@ -122,20 +115,9 @@ components:
   schemas:
     CustomerKindsResponse:
       title: CustomerKindsResponse
-      required:
-        - id
-        - kind
       type: object
-      properties:
-        id:
-          title: Id
-          type: string
-          description: ID of the customer kind
-        kind:
-          title: Kind
-          type: string
-          description: Customer kind
-          example: Key account
+      additionalProperties:
+        type: string
     CustomerKindDetailsResponse:
       title: CustomerKindDetailsResponse
       required:
