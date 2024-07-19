@@ -74,7 +74,7 @@ ID `3` could yield the following response:
 ```
 
 - `POST /login`  
-Log in a customer or other user. This operation requires the API key token in the same fashion as `GET /customer_kinds}`
+Log in a customer or other user. This operation requires the API key token in the same fashion as `GET /customer_kinds`
 and `GET /customer_kinds/{id}` and returns a user-specific JWT for use with operations that implement user-specific
 behavior, e.g., `GET /customer` (see below). The following listing shows a valid example request to the operation:
 ```json
