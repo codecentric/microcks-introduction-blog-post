@@ -6,12 +6,20 @@
     <groupId>de.codecentric</groupId>
     <artifactId>microcks-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>integration-tests</module>
+        <module>api-implementation-app</module>
+    </modules>
 
     <properties>
         <java.version>21</java.version>
+        <project.encoding>UTF-8</project.encoding>
+
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
 
         <!--
             Property to be embedded my the Maven Resources Plugin both in the example API's OpenAPI specification as
@@ -22,139 +30,18 @@
         -->
         <mocked_api.version>1.0</mocked_api.version>
 
-        <jjwt.version>0.12.6</jjwt.version>
-        <junit.version>5.11.0-M2</junit.version>
-        <junit-platform.version>1.11.0-M2</junit-platform.version>
+        <!--
+            Properties shared by the project's Maven modules and to be embedded my the Maven Resources Plugin into
+            modules' files as necessary.
+        -->
+        <api_implementation.server.port>8081</api_implementation.server.port>
+        <api_key_token>eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBUElNb2NrIiwiaWF0IjoxNzIxMzY5MjQyLCJleHAiOjE3MjEzNjk1NDJ9.UqlkO_qW71spEEBZdJb6Oxe0j71U6_7Kdv6UotTbJUE</api_key_token>
+        <some_customer_email>some_customer@example.org</some_customer_email>
+        <some_customer_password>123456</some_customer_password>
+        <some_customer_token>eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBUElNb2NrIiwiZW1haWwiOiJzb21lX2N1c3RvbWVyQGV4YW1wbGUub3JnIn0.7TECmPgKMLftw2kK_CncM_AK0r7HAY7AmkV0y7qSA5Y</some_customer_token>
+        
         <log4.version>2.23.1</log4.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
         <microcks.version>1.9.0</microcks.version>
-        <microcks.testcontainers.version>0.2.8</microcks.testcontainers.version>
-        <rest.assured.version>5.5.0</rest.assured.version>
-        <resteasy.version>6.2.9.Final</resteasy.version>
-        <swagger.parser.version>2.1.22</swagger.parser.version>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-bom</artifactId>
-                <version>${resteasy.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-            <version>${jjwt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <version>${jjwt.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
-            <version>${jjwt.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-suite</artifactId>
-            <version>${junit-platform.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.microcks</groupId>
-            <artifactId>microcks-app</artifactId>
-            <version>${microcks.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.microcks</groupId>
-            <artifactId>microcks-testcontainers</artifactId>
-            <version>${microcks.testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>${rest.assured.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.swagger.parser.v3</groupId>
-            <artifactId>swagger-parser</artifactId>
-            <version>${swagger.parser.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-client</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jackson2-provider</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-resources-plugin.version}</version>
-                <configuration>
-                    <propertiesEncoding>ISO-8859-1</propertiesEncoding>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-            </plugin>
-        </plugins>
-
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <includes>
-                    <include>customers.yaml</include>
-                    <include>customers_examples.postman_collection.json</include>
-                </includes>
-                <filtering>true</filtering>
-            </testResource>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-                <filtering>false</filtering>
-            </testResource>
-        </testResources>
-    </build>
 </project>

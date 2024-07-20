@@ -7,7 +7,6 @@ import io.github.microcks.domain.Service;
 import io.github.microcks.testcontainers.MicrocksContainer;
 import io.github.microcks.util.DispatchStyles;
 import io.github.microcks.web.dto.OperationOverrideDTO;
-import io.jsonwebtoken.Jwts;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.parser.OpenAPIV3Parser;
@@ -19,14 +18,15 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.Testcontainers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -41,7 +41,8 @@ public class InfrastructureSetup {
     public static final String HTTP_HEADER_API_KEY = "api_key";
     public static final String HTTP_HEADER_CUSTOMER_TOKEN = "customer_token";
 
-    private static final long DEFAULT_TOKEN_VALIDITY_MS = TimeUnit.MINUTES.toMillis(5);
+    private static final String API_IMPLEMENTATION_PORT_EXECUTION_PROPERTY = "api_implementation.server.port";
+    private static final String EXECUTION_PROPERTIES_RESOURCE_FILENAME = "execution.properties";
     private static final Logger logger = LogManager.getLogger(InfrastructureSetup.class);
 
     private static Info apiInfo;
@@ -77,6 +78,37 @@ public class InfrastructureSetup {
         if (apiMock != null && apiMock.isRunning())
             return;
 
+        /*
+         * Parse file with execution-related properties that get injected from the root POM upon project build as they
+         * are shared by both Maven modules.
+         */
+        var executionProperties = new Properties();
+        try {
+            executionProperties.load(
+                Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream(EXECUTION_PROPERTIES_RESOURCE_FILENAME)
+            );
+        } catch (IOException ex) {
+            logger.error("Couldn't load properties file {} that configures test execution. Tests are likely to fail.",
+                EXECUTION_PROPERTIES_RESOURCE_FILENAME);
+        }
+
+        // Expose the port of the example API implementation in module "api-implementation-app" as configured in the
+        // project's root POM. In Testcontainers terminology, "port exposure" refers to making a port on the host
+        // machine accessible in the container network by binding it to the address
+        // "http://host.testcontainers.internal:${PORT}". Consequently, it becomes possible to access to the example API
+        // implementation from a running Microcks testcontainer for interactive contract testing.
+        var apiImplementationServerPort = executionProperties.getProperty(API_IMPLEMENTATION_PORT_EXECUTION_PROPERTY);
+        if (apiImplementationServerPort != null)
+            Testcontainers.exposeHostPorts(Integer.parseInt(apiImplementationServerPort));
+        else
+            logger.warn(
+                "Property {} in test execution configuration file {} is null. Connection from mock container to API " +
+                    "implementation application won't be possible.",
+                API_IMPLEMENTATION_PORT_EXECUTION_PROPERTY,
+                EXECUTION_PROPERTIES_RESOURCE_FILENAME
+            );
+
         /* Start the Microcks testcontainer for the API mock */
         apiMock = new MicrocksContainer("quay.io/microcks/microcks-uber:1.9.0");
         apiMock
@@ -91,10 +123,10 @@ public class InfrastructureSetup {
             .start();
 
         /*
-         * Generate a JSON Web Token (JWT) that the API expects (as an additional, yet weak, security measure) for some
-         * of its operations
+         * Retrieve the JSON Web Token (JWT), which the API expects (as an additional, yet weak, security measure) for
+         * some of its operations, from the previously parsed execution-related properties file
          */
-        apiKeyToken = buildMockedApiKeyToken();
+        apiKeyToken = executionProperties.getProperty("api_key_token");
 
         /* Prepare the API mock for tests */
         // We parse the OpenAPI spec that is the mock's foundation because we (i) require some of its information to be
@@ -137,19 +169,6 @@ public class InfrastructureSetup {
             .keySet().stream().findFirst().orElse("null");
         prepareCustomerOperationMock(apiMock.getHttpEndpoint(), mockedService, loginApiExamples,
             customerErrorExampleName);
-    }
-
-    /**
-     * Generate a JWT token to serve as the API key for some operations of the mocked API.
-     */
-    private static String buildMockedApiKeyToken() {
-        var now = new Date();
-        return Jwts.builder()
-            .issuer("APIMock")
-            .issuedAt(now)
-            .expiration(new Date(now.getTime() + DEFAULT_TOKEN_VALIDITY_MS))
-            .signWith(Jwts.SIG.HS256.key().build())
-            .compact();
     }
 
     /**
