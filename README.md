@@ -93,8 +93,8 @@ loaded into started Microcks testcontainers and accompanied by examples from a
 [dedicated Postman collection](api-spec/customers_examples.postman_collection.json).
 
 **Disclaimer:** We discovered this API in the wild, and found it quite coherent, understandable, and therefore suitable
-to illustrate some of Microcks core features. However, it also bears quite some potential for optimization and does not
-reflect a style of API design we advise for production usage.
+to illustrate some of Microcks's core features. However, it also bears quite some potential for optimization and does
+not reflect a style of API design we advise for production usage.
 
 The example API is rooted in the domain of Customer Relationship Management and provides the following operations:
  
