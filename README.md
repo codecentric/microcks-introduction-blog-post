@@ -1,10 +1,10 @@
-# Specification-Based API Mocking, Simulation, and Testing with [Microcks](https://microcks.io) - Demo Application
+# Definition-Based API Mocking, Simulation, and Testing with [Microcks](https://microcks.io) - Demo Application
 
 ## Introduction
 
 This [codecentric](https://codecentric.de) demo application illustrates the usage of Microcks for API mocking and
-testing on the basis of API specifications expressed with [OpenAPI](https://github.com/OAI/OpenAPI-Specification). We
-rely on [Testcontainers](https://testcontainers.com) to run the mock and execute tests against it leveraging
+testing on the basis of API definitions expressed with [OpenAPI](https://github.com/OAI/OpenAPI-Specification). We rely
+on [Testcontainers](https://testcontainers.com) to run the mock operations and execute tests against it leveraging
 [REST-assured](https://rest-assured.io). This approach allows for consistent and automated integration testing both
 local and in CI/CD pipelines.
 
@@ -13,7 +13,7 @@ serve for Microcks-based contract testing.
 
 ## Illustrated Microcks Features
 
-By means of the [example API](#the-example-api), we are able to showcase several of Microcks's core features:
+By means of the [example API](#the-example-api), we are able to showcase several of Microcks' core features:
 - [Microcks Testcontainers module](https://testcontainers.com/modules/microcks)
 - [Multi-artifacts](https://microcks.io/documentation/explanations/multi-artifacts)
 - Dispatchers:
@@ -23,8 +23,8 @@ By means of the [example API](#the-example-api), we are able to showcase several
 [context expressions](https://microcks.io/documentation/references/templates/#context-expression)
 - [Dynamic mock content](https://microcks.io/documentation/explanations/dynamic-content) with
 [function expressions](https://microcks.io/documentation/references/templates/#function-expressions)
-- Programmatic usage of [Microcks's own API](https://microcks.io/documentation/references/apis/open-api) for mock
-preparation beyond characteristics from API specifications
+- Programmatic usage of [Microcks' own API](https://microcks.io/documentation/references/apis/open-api) for mock
+preparation beyond characteristics from API definitions
 - [Interactive testing of contract conformance](https://microcks.io/documentation/explanations/conformance-testing)
 
 ## Running the Example for Microcks-Based Integration Testing
@@ -32,11 +32,11 @@ preparation beyond characteristics from API specifications
 The example requires Maven and Java 21 or greater. Its implementation resides in the
 [`integration-tests`](integration-tests) module and comprises a
 [test suite](integration-tests/src/test/java/de/codecentric/microcks_demo/TestSuite.java) with a total of 14
-REST-assured API tests, which are executed against a Microcks testcontainer, whose preparation routine is implemented in
+REST-assured API tests which are executed against a Microcks testcontainer, whose preparation routine is implemented in
 the
 [`InfrastructureSetup` class](integration-tests/src/test/java/de/codecentric/microcks_demo/tests/infrastructure/InfrastructureSetup.java).
 
-To spin up the testcontainer and execute the tests run `mvn clean test`, either from the directory in which the root
+To spin up the testcontainer and execute the tests, run `mvn clean test` either from the directory in which the root
 [`pom.xml`](pom.xml) file resides or, alternatively, from the module's sub-directory with the module's own
 [`pom.xml`](integration-tests/pom.xml).
 
@@ -89,13 +89,14 @@ leverage Microcks for the API's contract testing following these steps in the Mi
    
 ## The Example API
 
-The demo application comprises an [OpenAPI specification for an example API](api-spec/customers.yaml) that is
-loaded into started Microcks testcontainers and accompanied by examples from a
+The demo application comprises an [OpenAPI definition for an example API](api-spec/customers.yaml) that is loaded into
+started Microcks testcontainers and accompanied by examples from a
 [dedicated Postman collection](api-spec/customers_examples.postman_collection.json).
 
 **Disclaimer:** We discovered this API in the wild, and found it quite coherent, understandable, and therefore suitable
-to illustrate some of Microcks's core features. However, it also bears quite some potential for optimization and does
-not reflect a style of API design we advise for production usage.
+to illustrate some of Microcks' core features. However, it also bears some potential for optimization and does not
+reflect a style of API design
+[that we would advise](https://www.codecentric.de/leistungen/api-experience-api-operations).
 
 The example API is rooted in the domain of Customer Relationship Management and provides the following operations:
  
