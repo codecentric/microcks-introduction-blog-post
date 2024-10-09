@@ -2,11 +2,12 @@
 
 ## Introduction
 
-This [codecentric](https://codecentric.de) demo application illustrates the usage of Microcks for API mocking and
-testing on the basis of API definitions expressed with [OpenAPI](https://github.com/OAI/OpenAPI-Specification). We rely
-on [Testcontainers](https://testcontainers.com) to run the mock operations and execute tests against it leveraging
-[REST-assured](https://rest-assured.io). This approach allows for consistent and automated integration testing both
-local and in CI/CD pipelines.
+This [codecentric](https://codecentric.de) demo application accompanies a
+[blog series about Microcks](https://www.codecentric.de/wissens-hub/blog/charge-your-apis-volume-31-definition-based-api-mocking-simulation-and-testing-with-microcks-part-1-introduction),
+and illustrates the tool's usage for API mocking and testing on the basis of API definitions expressed with
+[OpenAPI](https://github.com/OAI/OpenAPI-Specification). We rely on [Testcontainers](https://testcontainers.com) to run
+the mock operations and execute tests against it leveraging [REST-assured](https://rest-assured.io). This approach
+allows for consistent and automated integration testing both local and in CI/CD pipelines.
 
 In addition, this demo comprises a module that implements an [example API](#the-example-api) to the extent that it can
 serve for Microcks-based contract testing.
